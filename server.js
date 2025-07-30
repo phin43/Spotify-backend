@@ -9,7 +9,13 @@ app.use(express.urlencoded({ extended: true }));
 
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-const redirectUri = process.env.REDIRECT_URI || "https://xyx87r.csb.app"; // your frontend sandbox
+const redirectUri = process.env.REDIRECT_URI || "https://spotify-backend-xxxx.onrender.com/callback"; // Replace xxxx with your actual Render backend name
+
+// Spotify callback route
+app.get("/callback", (req, res) => {
+  const code = req.query.code || null;
+  res.json({ code }); // later your frontend will use this
+});
 
 // Exchange authorization code for access token
 app.post("/api/token", async (req, res) => {
@@ -34,6 +40,9 @@ app.post("/api/token", async (req, res) => {
   res.json(data);
 });
 
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
+// Render requires process.env.PORT
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
+
